@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Progress Bar</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div id="progress-bar" style="width: 50%; background-color: lightblue;">0%</div>
+    <button id="start-button">Start Task</button>
+
+    <script>
+        $(document).ready(function() {
+            $("#start-button").click(function() {
+                $.ajax({
+                    url: "/start_task/",
+                    type: "POST",
+                    success: function() {
+                        setInterval(updateProgress, 1000);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+
+            function updateProgress() {
+                $.get("/get_progress/", function(data) {
+                    var progress = data.progress * 100;
+                    $("#progress-bar").css("width", progress + "%");
+                    $("#progress-bar").text(progress.toFixed(2) + "%");
+                });
+            }
+        });
+    </script>
+</body>
+</html>

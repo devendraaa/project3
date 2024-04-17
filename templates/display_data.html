@@ -1,0 +1,78 @@
+{% extends 'base2.html' %}
+
+{%block body%}
+
+
+<section id="home" class="welcome-hero">
+
+		
+    <div class="container content-center">
+    
+        <div class="welcome-hero-txt">
+             <h2> Smart Route for <br> Ambulance And Fire Brigade<br></h2>
+            <p>
+                 Find Clear Route's for Ambulance, Fire Brigade and more think in just One click 
+             </p> 
+         </div>
+         
+         <div class="welcome-hero-txt">
+            <h2><br> Nearest Hospitals  <br></h2>
+            
+        </div>
+     
+     </div>
+ 
+ 
+</section>
+
+{% comment %} <section id="home" class="welcome-hero"> {% endcomment %}
+    <div class="welcome-hero-txt">
+        
+       <p>
+            Find Clear Route's for Ambulance, Fire Brigade and more think in just One click 
+        </p> 
+    </div>
+		
+   <div class="container content-center mt-3">
+        <div class="row justify-content-md-center">
+   
+            <form id="delete-form">
+                {% csrf_token %}
+                {% for item in data %}
+                    <input type="checkbox" name="selected_ids[]" value="{{ item.id }}"> {{ item.name }}<br>
+                {% endfor %}
+                <button type="submit">Delete Selected Items</button>
+            </form>
+        
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            <script>
+                $(document).ready(function() {
+                    $('#delete-form').submit(function(event) {
+                        event.preventDefault();
+                        var selectedIds = $(this).find('input[name="selected_ids[]"]:checked').map(function() {
+                            return $(this).val();
+                        }).get();
+                        deleteSelectedData(selectedIds);
+                    });
+        
+                    function deleteSelectedData(selectedIds) {
+                        $.ajax({
+                            url: '/delete-selected-data/',
+                            type: 'POST',
+                            data: {
+                                'selected_ids[]': selectedIds,
+                                'csrfmiddlewaretoken': '{{ csrf_token }}'
+                            },
+                            success: function(response) {
+                                alert('Selected items deleted successfully.');
+                                // Optionally, refresh the page or update the UI
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error:', error);
+                            }
+                        });
+                    }
+                });
+            </script>
+
+{% endblock body%}

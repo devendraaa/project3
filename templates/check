@@ -1,0 +1,196 @@
+<style>
+  #map { height: 350px; }
+</style>
+
+
+{% for sens_data in sens_locc %}
+<li data-sen-lat="{{sens_data.lat}}"
+data-sen-lon="{{sens_data.lon}}"> {{sens_data.lat}} </li>
+<li> {{sens_data.lon}} </li>
+
+
+<script>
+    var map = L.map('map');
+        map.setView([19.046575, 72.851558], 16);
+        
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+    
+        navigator.geolocation.watchPosition(success, error);
+    
+        let marker, circle, zoomed;
+    
+        function success(pos){
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          const accuracy = pos.coords.accuracy;
+    
+          if (marker){
+    
+            map.removeLayer(marker);
+            map.removeLayer(circle);
+          }
+    
+          marker = L.marker([lat, lng]).addTo(map);
+          circle = L.circle([lat, lng], { radius: accuracy} ).addTo(map);
+    
+          if (!zoomed) {
+            zoomed = map.fitBounds(circle.getBounds());
+          }
+    
+          map.setView([lat, lng]);
+    
+        }
+    
+        function error (err){
+    
+            if(err.code === 1){
+    
+                alert("Please allow geolocation access");
+            }else{
+    
+              alert("Cannot get current location")
+            }
+    
+        }
+    
+        
+    
+    
+      </script>
+
+
+
+      <script>
+
+      
+
+        var map = L.map('map');
+        map.setView([19.046575, 72.851558], 16);
+        
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 20,
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+  
+  
+      var locations = [
+    ["LOCATION_1", 19.047073, 72.851777],
+    ["LOCATION_2", 19.053096, 72.847195],
+    ["LOCATION_3", 19.054131, 72.846515],
+    ["LOCATION_4", 19.038040, 72.853780],
+    ["LOCATION_5", 19.037998, 72.853847],
+    ["LOCATION_6", 19.038102, 72.853711],
+    ["LOCATION_7", 19.037998, 72.853847],
+    ["LOCATION_8", 19.038998, 72.856847]
+  ];
+  
+  // var map = L.map('map').setView([11.206051, 122.447886], 8);
+  // mapLink =
+    //'<a href="http://openstreetmap.org">OpenStreetMap</a>';
+   //L.tileLayer(
+   // 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+   //   attribution: '&copy; ' + mapLink + ' Contributors',
+    //   maxZoom: 18,
+    // }).addTo(map);
+  
+  for (var i = 0; i < locations.length; i++) {
+    marker = new L.marker([locations[i][1], locations[i][2]])
+      .bindPopup(locations[i][0])
+      .addTo(map);
+  }
+  
+  let elements = document.querySelectorAll('li');
+  var dataa = elements.dataset;
+  console.log(dataa)
+  
+        
+  </script>
+
+
+
+  <script>
+    // Map initialization 
+    var map = L.map('map').setView([19.047073,72.851777 ], 8);
+
+    //osm layer
+    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+    osm.addTo(map);
+
+    var marker = L.marker([28.3949, 84.1240]).addTo(map);
+
+    L.control.locate().addTo(map);
+
+
+    if (!navigator.geolocation){
+        console.log("your browser doesn't support geolocation feature")
+      }else{
+        setInterval(() => {
+          navigator.geolocation.getCurrentPosition(getPosition)
+
+        }, 5000);
+
+        
+      }
+
+      function getPosition(position){
+
+        //console.log(position)
+        var lat = position.coords.latitude
+        var long = position.coords.longitude
+        var accuracy = position.coords.accuracy
+
+        // var marker = L.marker([lat, long]).addTo(map)
+        // var circle = L.circle([lat, long], {radius: accuracy})
+
+        console.log("your coordinates is : lat: " + lat + "long : " + long + " Accuracy :"+ accuracy)
+      }
+  
+
+      L.Routing.control({
+        waypoints: [
+          L.latLng(lat, long),
+          L.latLng(57.6792, 11.949)
+        ]
+      }).addTo(map);
+
+
+      function success(pos){ 
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        const accuracy = pos.coords.accuracy; 
+  
+        if (marker){
+  
+          //map.removeLayer(marker);
+          // map.removeLayer(circle);
+        }
+  
+        marker = L.marker([lat, lng]).addTo(map);
+        circle = L.circle([lat, lng], { radius: accuracy} ).addTo(map);
+  
+        if (!zoomed) {
+          zoomed = map.fitBounds(circle.getBounds());
+        }
+  
+        map.setView([lat, lng]);
+  
+      }
+  
+      function error (err){
+  
+          if(err.code === 1){
+  
+              alert("Please allow geolocation access");
+          }else{
+  
+            alert("Cannot get current location")
+          }
+  
+      }
+
+</script>

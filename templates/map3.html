@@ -1,0 +1,54 @@
+{% extends 'base2.html' %}
+
+
+
+{% block title %} Sensor Locations {% endblock title %}
+
+{%block body%}
+
+
+
+<section id="home" class="welcome-hero">
+
+		
+    <div class="container content-center">
+    
+        <div class="welcome-hero-txt">
+             <h2> Smart Route for <br> Ambulance And Fire Brigade<br></h2>
+            <p>
+                 Find Clear Route's for Ambulance, Fire Brigade and more think in just One click 
+             </p> 
+         </div>
+         
+         <div class="welcome-hero-txt">
+            <h2><br> Current Route <br></h2>
+            
+        </div>
+     
+     </div>
+ 
+ 
+</section>
+
+{% comment %} <section id="home" class="welcome-hero"> {% endcomment %}
+    <div class="welcome-hero-txt">
+        
+       <p>
+            Find Clear Route's for Ambulance, Fire Brigade and more think in just One click 
+        </p> 
+    </div>
+		
+   <div class="container content-center mt-3">
+        <div class="row justify-content-md-center">
+   
+    
+            {{ map3|safe }}
+
+        </div>
+    </div>
+
+
+{% comment %} </section> {% endcomment %}
+
+
+{% endblock body%}

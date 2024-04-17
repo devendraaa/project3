@@ -1,0 +1,149 @@
+{% extends 'base2.html' %}
+
+
+{% comment %} {% block title %}login {% endblock title %} {% endcomment %}
+
+{%block body%}
+
+{% comment %} <div class="container">
+
+</div>
+<div class="container">
+    <form method="POST" action="/sensor">
+      
+        {% csrf_token %}
+        <h2>Input New Sensor Coordinates Data</h2>
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label" ></label>
+          <input type="text" class="form-control" name="latitude" placeholder="latitude">
+    
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label"></label>
+          <input type="text" class="form-control" name="longitude" placeholder="latitude">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+
+      <div class="input-group">
+        <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+        <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Button</button>
+      </div>
+
+  </div> {% endcomment %}
+
+
+
+<section id="home" class="welcome-hero">
+
+		
+    <div class="container content-center">
+      <div class="welcome-hero-txt text-center">
+        <h2> Smart Route for <br> Ambulance And Fire Brigade<br></h2>
+        <p>
+          Find Clear Route's for Ambulance, Fire Brigade and more think in just One click 
+        </p>
+      </div>
+
+      <div class="welcome-hero-txt text-center">
+        <h2>Add Sensor Data<br></h2>
+      </div>
+  
+                  <div class="text-center"> <!-- Center the form -->
+                    <form class="myform mx-auto" method="POST" action="/sensor" id="task-form2"> <!-- Add mx-auto class -->
+                      {% csrf_token %}
+                      <div class="row justify-content-center">
+                        <div class="col-md-12">
+                          <div class="welcome-hero-serch-box">
+                            <div class="welcome-hero-form">
+                              <div class="single-welcome-hero-form">
+                                <h3>Latitude</h3>
+                                <input type="text" class="form-control" placeholder="Ex: latitude of current location" id="latitude" name="latitude">
+                              </div>
+              
+                              <div class="single-welcome-hero-form">
+                                <h3>Longitude</h3>
+                                <input type="text" class="form-control" placeholder="Ex: longitude of current location" id="longitude" name="longitude">
+                          
+                              </div>	
+                            </div>
+                            <div class="row justify-content-center mt-6">
+                              <div class="col-md-6">
+                
+                                <div class="welcome-hero-serch text-center">
+                                  <button type="submit" class="btn btn-primary welcome-hero-btn">Submit </button>
+                                </div>
+                
+                              </div>
+                
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+              
+              </div>
+            </div>
+          </div>
+        
+
+        </form>
+      </div> <!-- End of centered form -->
+  
+    
+    </div>
+  
+  
+  </section>
+
+  <div class="welcome-hero-txt text-center">
+    <h2> Smart Route for <br> Ambulance And Fire Brigade<br></h2>
+    <p>
+      Find Clear Route's for Ambulance, Fire Brigade and more think in just One click 
+    </p>
+  </div>
+
+
+  <script>
+		$(document).ready(function() {
+			$('#task-form2').submit(function(event) {
+				event.preventDefault(); // Prevent default form submission
+		
+				// Serialize form data
+				var formData = $(this).serialize();
+		
+				// Submit form data asynchronously using AJAX
+				$.ajax({
+					url: $(this).attr('action'),
+					type: $(this).attr('method'),
+					data: formData,
+					success: function(response) {
+						// Handle success response
+						if (response.error) {
+							// Display error message
+							alert(response.error);
+						} else {
+							// Check if hospital location is provided
+							var latitude = $('#latitude').val();
+              var longitude = $('#longitude').val();
+							if (latitude && longitude) {
+								// Display success message
+								
+								// Optionally, redirect to another page
+								
+							} else {
+								// Display message if hospital location is not entered
+								alert("Please Enter Coordinates");
+							}
+						}
+					},
+					error: function(xhr, errmsg, err) {
+						// Handle error
+						console.log(xhr.status + ": " + xhr.responseText); // Log error to console
+					}
+				});
+			});
+		});
+</script>
+
+{% endblock body%}

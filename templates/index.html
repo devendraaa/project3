@@ -1,0 +1,320 @@
+{% comment %} <!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background Task Form</title>
+</head>
+<body onload = "geoLocation();">
+    <h1>Background Task Form</h1>
+    <form class = "myform" id="task-form">
+        <label for="P_latitude">Latitude:</label>
+        <input type="text" id="P_latitude" name="P_latitude" value=""><br><br>
+        
+        <label for="P_longitude">Longitude:</label>
+        <input type="text" id="P_longitude" name="P_longitude" value=""><br><br>
+        
+        <label for="h_location">Location:</label>
+        <input type="text" id="h_location" name="h_location"><br><br>
+        
+        <button type="submit">Start Task</button>
+    </form>
+
+    <div id="progress-bar" style="display: none;">
+        <div id="progress" style="background-color: lightblue; width: 0%;">Progress: 0%</div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#task-form").submit(function(event) {
+                event.preventDefault();  // Prevent default form submission
+
+                // Get form data
+                var formData = $(this).serialize();
+
+                // Display progress bar
+                $("#progress-bar").show();
+
+                // Send AJAX request to start the task
+                $.post("/start_task/", formData, function(data) {
+                    var taskId = data.task_id;
+                    console.log("Task ID:", taskId);
+
+                    // Poll for progress updates
+                    var intervalId = setInterval(function() {
+                        $.get("/get_progress/" + taskId + "/", function(data) {
+                            var progress = data.progress * 100;
+                            $("#progress").css("width", progress + "%");
+                            $("#progress").text("Progress: " + progress.toFixed(2) + "%");
+
+                            // If progress reaches 100%, stop polling
+                            if (progress >= 100) {
+                                clearInterval(intervalId);
+                            }
+                        });
+                    }, 1000);  // Poll every 1 second
+                });
+            });
+        });
+
+    
+
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                }
+            }
+        });
+        
+        // Function to get CSRF cookie value
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        // Function to check if HTTP method is safe
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        
+        // AJAX POST request with CSRF token included
+        $.ajax({
+            url: '/start_task/',
+            type: 'POST',
+            data: formData,
+            success: function(data) {
+                var taskId = data.task_id;
+                console.log("Task ID:", taskId);
+                // Add the rest of your success handling code here
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                console.error('Error:', errorThrown);
+            }
+        });
+    </script>
+</body>
+</html>
+<script type="text/javascript">
+
+
+    function geoLocation(){
+  
+      if (navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+      }
+    }
+  
+    function showPosition(position){
+  
+      document.querySelector('.myform input[name = "P_latitude"]').value = position.coords.latitude;
+      document.querySelector('.myform input[name = "P_longitude"]').value = position.coords.longitude;
+    }
+  
+    function showError(error){
+      switch(error.code){
+  
+        case error.PREMISSION_DENIED:
+        alert("You Must Allow Request For GeoLocation to Activate Given Route Sensor's");
+        location.reload();
+        break;
+      }
+    }
+  </script> {% endcomment %}
+
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One Page Website</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+      /* Custom CSS for the progress bar and background image */
+      body {
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        padding: 50px;
+        text-align: center;
+      }
+      .form-group {
+        margin-bottom: 30px;
+      }
+      .form-control {
+        border: none;
+        border-radius: 30px;
+        padding: 15px 20px;
+        font-size: 1em;
+        background: linear-gradient(to right, #6c63ff, #4c4cff);
+        color: #fff;
+        box-shadow: 0 4px 6px rgba(76, 76, 255, 0.1), 0 1px 3px rgba(76, 76, 255, 0.08);
+        transition: box-shadow 0.3s, background 0.3s;
+        width: 100%;
+      }
+      .form-control:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.3);
+      }
+      .form-control::placeholder {
+        color: #ccc;
+      }
+      .form-control:focus::placeholder {
+        color: transparent;
+      }
+      .form-control:before {
+        content: "\f041";
+        font-family: "Font Awesome 5 Free";
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #ccc;
+      }
+      .form-control:focus:before {
+        color: #6c63ff;
+      }
+      .form-control:hover:before {
+        color: #fff;
+      }
+      .btn-primary {
+        border-radius: 30px;
+        padding: 15px 30px;
+        font-size: 1.2em;
+        background-color: #4c4cff;
+        border: none;
+        transition: background-color 0.3s;
+      }
+      .btn-primary:hover {
+        background-color: #6c63ff;
+      }
+      #progress-bar {
+        margin-top: 20px;
+      }
+      /* Custom CSS for header and footer */
+      header, footer {
+        background-color: #333;
+        color: #fff;
+        padding: 10px 0;
+        text-align: center;
+      }
+      header nav, footer nav {
+        margin-top: 10px;
+      }
+      header nav a, footer nav a {
+        color: #fff;
+        text-decoration: none;
+        margin: 0 10px;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+      header nav a:hover, footer nav a:hover {
+        background-color: #555;
+      }
+      .gps-indicator {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    </style>
+  </head>
+  <body style="background-image: url('https://source.unsplash.com/1600x900/?road');">
+    <header>
+      <div class="container">
+        <nav>
+          <a href="#">Home</a>
+          <a href="#">About</a>
+          <a href="#">Contact</a>
+        </nav>
+      </div>
+    </header>
+    <section id="home" class="welcome-hero">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <form class="myform" method="POST" action="" id="task-form">
+                        {% csrf_token %}
+                        <div class="welcome-hero-serch-box">
+                            <div class="welcome-hero-form">
+                                <div class="single-welcome-hero-form">
+                                    <h3>Latitude</h3>
+                                    <input type="text" class="form-control" placeholder="Ex: latitude of current location" id="P_latitude" name="P_latitude">
+                                </div>
+                                <div class="single-welcome-hero-form">
+                                    <h3>Longitude</h3>
+                                    <input type="text" class="form-control" placeholder="Ex: longitude of current location" id="P_longitude" name="P_longitude">
+                                    <div class="gps-indicator" id="gps-indicator">
+                                        <i class="flaticon-gps-fixed-indicator"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="welcome-hero-serch-box">
+                            <div class="welcome-hero-form">
+                                <div class="single-welcome-hero-form">
+                                    <h3>Destination</h3>
+                                    <input type="text" class="form-control" placeholder="Ex: place, restaurant, food, automobile" id="h_location" name="h_location">
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="welcome-hero-serch text-center">
+                            <button type="submit" class="btn btn-primary welcome-hero-btn">Search <i data-feather="search"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    </section>
+    <footer>
+      <div class="container">
+        <nav>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Sitemap</a>
+        </nav>
+        &copy; 2022 One Page Website. All rights reserved.
+      </div>
+    </footer>
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+  </html>
+  
+  
+  
+  
+  
+  
+  
+  
+  

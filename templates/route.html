@@ -1,0 +1,936 @@
+{% extends 'base2.html' %}
+{% comment %} {% load static %}
+{% static "images" as baseUrl %}
+<!doctype html>
+<html class="no-js" lang="en">
+
+    <head>
+
+		<style>
+			/* Add custom styling here */
+			.gps-indicator {
+			  cursor: pointer;
+			}
+		  </style>
+
+		  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+		  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+		  crossorigin="">
+
+		  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+		</script>
+
+		  
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+		  <script src="https://unpkg.com/@geoapify/geocoder-autocomplete@^1/dist/index.min.js"></script>
+		  <link rel="stylesheet" type="text/css" href="https://unpkg.com/@geoapify/geocoder-autocomplete@^1/styles/minimal.css">
+		  
+	  
+		  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+		  <link rel="stylesheet" type="text/css" href="https://unpkg.com/@geoapify/geocoder-autocomplete@^1/styles/minimal.css">
+
+
+		  <link rel="stylesheet" href="{% static "style.css" %}">
+	  
+		  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+		  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+		  crossorigin=""/>
+		  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+		  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+		  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+		  <script src="{% static 'main.js' %}" defer></script>
+		  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+
+		  
+        <!-- meta data -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+        <!--font-family-->
+		<link href="{% static 'https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i' %}" rel="stylesheet">
+        
+        <!-- title of site -->
+        <title>Directory Landing Page</title>
+
+        <!-- For favicon png -->
+		<link rel="shortcut icon" type="image/icon" href="{% static 'logo/favicon.png' %}">
+       
+        <!--font-awesome.min.css-->
+        <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+
+        <!--linear icon css-->
+		<link rel="stylesheet" href="{% static 'css/linearicons.css' %}">
+
+		<!--animate.css-->
+        <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+
+		<!--flaticon.css-->
+        <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
+
+		<!--slick.css-->
+        <link rel="stylesheet" href="{% static 'css/slick.css' %}">
+		<link rel="stylesheet" href="{% static 'css/slick-theme.css' %}">
+		
+        <!--bootstrap.min.css-->
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+		
+		<!-- bootsnav -->
+		<link rel="stylesheet" href="{% static 'css/bootsnav.css' %}" >	
+        
+        <!--style.css-->
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        
+        <!--responsive.css-->
+        <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+        
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		
+        <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+		
+
+    </head>
+	
+	<body>
+
+		{% if messages %}
+		{% for message in messages %}
+		  <div class="alert alert-warning {{ message.tags }} alert-dismissible fade show" role="alert">
+			{{ message }}
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		  </div>
+		{% endfor %}
+	  {% endif %}
+		<!--[if lte IE 9]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+        <![endif]-->
+		
+		<!--header-top start -->
+		<!--header-top end -->
+
+		<!-- top-area Start -->
+		<section class="top-area">
+			<div class="header-area">
+				<!-- Start Navigation -->
+			    <nav class="navbar navbar-default bootsnav  navbar-sticky navbar-scrollspy"  data-minus-value-desktop="70" data-minus-value-mobile="55" data-speed="1000">
+
+			        <div class="container">
+
+			            <!-- Start Header Navigation -->
+			            <div class="navbar-header">
+			                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
+			                    <i class="fa fa-bars"></i>
+			                </button>
+			                <a class="navbar-brand" href="{% static 'index.html' %}">Smart<span>Ambulance <span> Route </span></a>
+
+			            </div><!--/.navbar-header-->
+			            <!-- End Header Navigation -->
+
+			            <!-- Collect the nav links, forms, and other content for toggling -->
+			            <div class="collapse navbar-collapse menu-ui-design" id="navbar-menu">
+			                <ul class="nav navbar-nav navbar-right" data-in="fadeInDown" data-out="fadeOutUp">
+			                    <li><a href="">home</a></li>
+			                    <li><a href="/map">All Sensor</a></li>
+			                    <li><a href="/map2">Active Sensors</a></li>
+			                    <li><a href="/map3">Current Route</a></li>
+			                    <li><a href="/login">Login</a></li>
+			                </ul><!--/.nav -->
+			            </div><!-- /.navbar-collapse -->
+			        </div><!--/.container-->
+			    </nav><!--/nav-->
+			    <!-- End Navigation -->
+			</div><!--/.header-area-->
+		    <div class="clearfix"></div>
+
+		</section><!-- /.top-area-->
+		<!-- top-area End -->
+
+
+
+		<!--works end -->
+
+		<!--footer start-->
+		<footer id="footer"  class="footer">
+			<div class="container">
+				<div class="footer-menu">
+		           	<div class="row">
+			           	<div class="col-sm-3">
+			           		 <div class="navbar-header">
+				                <a class="navbar-brand" href="index.html">list<span>race</span></a>
+				            </div><!--/.navbar-header-->
+			           	</div>
+			           	<div class="col-sm-9">
+			           		<ul class="footer-menu-item">
+			                    <li class="scroll"><a href="#works">how it works</a></li>
+			                    <li class="scroll"><a href="#explore">explore</a></li>
+			                    <li class="scroll"><a href="#reviews">review</a></li>
+			                    <li class="scroll"><a href="#blog">blog</a></li>
+			                    <li class="scroll"><a href="#contact">contact</a></li>
+			                    <li class=" scroll"><a href="#contact">my account</a></li>
+			                </ul><!--/.nav -->
+			           	</div>
+		           </div>
+				</div>
+				<div class="hm-footer-copyright">
+					<div class="row">
+						<div class="col-sm-5">
+							<p>
+								&copy;copyright. designed and developed by <a href="https://www.themesine.com/">themesine</a>
+							</p><!--/p-->
+						</div>
+						<div class="col-sm-7">
+							<div class="footer-social">
+								<span><i class="fa fa-phone"> +1  (222) 777 8888</i></span>
+								<a href="#"><i class="fa fa-facebook"></i></a>	
+								<a href="#"><i class="fa fa-twitter"></i></a>
+								<a href="#"><i class="fa fa-linkedin"></i></a>
+								<a href="#"><i class="fa fa-google-plus"></i></a>
+							</div>
+						</div>
+					</div>
+					
+				</div><!--/.hm-footer-copyright-->
+			</div><!--/.container-->
+
+			<div id="scroll-Top">
+				<div class="return-to-top">
+					<i class="fa fa-angle-up " id="scroll-top" data-toggle="tooltip" data-placement="top" title="" data-original-title="Back to Top" aria-hidden="true"></i>
+				</div>
+				
+			</div><!--/.scroll-Top-->
+			
+        </footer><!--/.footer-->
+		<!--footer end-->
+
+		{% block body %}  {% endblock body %}
+		
+		<!-- Include all js compiled plugins (below), or include individual files as needed -->
+
+		<script src="{% static 'js/jquery.js' %}"></script>
+        
+        <!--modernizr.min.js-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+		
+		<!--bootstrap.min.js-->
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+		
+		<!-- bootsnav js -->
+		<script src="{% static 'js/bootsnav.js' %}"></script>
+
+        <!--feather.min.js-->
+        <script  src="{% static 'js/feather.min.js' %}"></script>
+
+        <!-- counter js -->
+		<script src="{% static 'js/jquery.counterup.min.js' %}"></script>
+		<script src="{% static 'js/waypoints.min.js' %}"></script>
+
+        <!--slick.min.js-->
+        <script src="{% static 'js/slick.min.js' %}"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+		     
+        <!--Custom JS-->
+        <script src="{% static 'js/custom.js' %}"></script>
+
+
+
+
+
+<script>
+	$(window).on('load',function(){
+    $(".loader").fadeOut(1000);
+    $(".content").fadeIn(1000);
+	});
+</script>
+
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+<script> src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js" </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+
+{% comment %} // Function to fetch address suggestions from Nominatim API 
+
+        
+</body>
+	
+</html> {% endcomment %}
+
+
+
+{% block title %} Sensor Locations {% endblock title %}
+
+
+
+{%block body%}
+
+<style>
+    /* Style for the table */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    /* Style for table header */
+    th {
+        background-color: #f2f2f2;
+        text-align: center;
+        padding: 20px 10px;
+        font-size: 20px;
+        color: #333;
+    }
+
+    /* Style for table body */
+    td {
+        padding: 10px;
+    }
+
+    /* Style for hospital names */
+    .hospital-name {
+        font-weight: bold;
+        font-size: 16px;
+        color: #333;
+    }
+</style>
+
+
+<section id="home" class="welcome-hero">
+	<div class="container content-center">
+		<div class="welcome-hero-txt text-center">
+			
+			<h2> Smart Route for <br> Ambulance And Fire Brigade<br></h2>
+			<p>
+				Find Clear Route's for Ambulance, Fire Brigade and more think in just One click 
+			</p>
+		</div>
+
+		<div class="text-center"> <!-- Center the form -->
+			<form class="myform mx-auto" method="POST" action="" id="task-form"> <!-- Add mx-auto class -->
+				{% csrf_token %}
+				<div class="row justify-content-center">
+					<div class="col-md-12">
+						<div class="welcome-hero-serch-box">
+							<div class="welcome-hero-form">
+								<div class="single-welcome-hero-form">
+									<h3>Latitude</h3>
+									<input type="text" class="form-control" placeholder="Ex: latitude of current location" id="P_latitude" name="P_latitude">
+								</div>
+
+								<div class="single-welcome-hero-form">
+									<h3>Longitude</h3>
+									<input type="text" class="form-control" placeholder="Ex: longitude of current location" id="P_longitude" name="P_longitude">
+									<div class="gps-indicator" id="gps-indicator">
+										<a class="flaticon-gps-fixed-indicator"></a>
+										{% comment %} <button onclick="calculateDistance()" class="flaticon-gps-fixed-indicator"></button> {% endcomment %}
+									</div>
+								</div>	
+
+
+								
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row justify-content-center mt-3">
+					<div class="col-md-12">
+						<div class="welcome-hero-serch-box">
+							<div class="welcome-hero-form">
+								<div class="single-welcome-hero-form">
+									<h3>Destination</h3>
+									<input type="text" class="form-control" placeholder="Ex: place, restaurant, food, automobile" id="h_location" name="h_location">
+								</div>
+							</div>
+
+							<div class="row justify-content-center mt-6">
+								<div class="col-md-6">
+	
+									<div class="welcome-hero-serch text-center">
+										<button type="submit" class="btn btn-primary welcome-hero-btn">Search <i data-feather="search"></i></button>
+									</div>
+	
+								</div>
+	
+							</div>
+
+							
+						</div>
+					</div>
+				</div>
+			
+				
+
+				<div class="row justify-content-center mt-3">
+					<div class="col-md-12 text-center">
+						<div id="address-suggestions"></div>
+					</div>
+				</div>
+
+
+			
+
+			</form>
+		</div> <!-- End of centered form -->
+
+	
+	</div>
+
+
+</section>
+
+<div class="welcome-hero-txt text-center">
+	<h2> Smart Route for <br> Ambulance And Fire Brigade<br></h2>
+	
+</div>
+
+
+<div class="container content-center">
+<div class="welcome-hero-txt text-center">
+		<h2>m </h2>
+		
+		
+	</div> 
+
+	<div class="row justify-content-center mt-10">
+		<div class="col-md-12">
+				<div class="progress" id="progress-bar" style="display: none;">
+				<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" id="progress" style="width: 0%">Progress: 0%</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!--works start -->
+<section id="works" class="works">
+	<div class="container">
+		<div class="section-header">
+			<h2>Nearest Hospitals</h2>
+			<p><li><a href="/distance">Nearest Hospitals</a></li></p>
+			<p> select one of the beow Hospital </p>
+		</div><!--/.section-header-->
+	
+		<table>
+			<thead>
+				<tr>
+					<th colspan="2" style="background-color: #4CAF50; color: white; padding: 20px;">
+						<h1 style="text-align: center; margin: 0;"><strong>Top 5 Hospital Name</strong></h1>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for hospital, distance in hospital_distance_tuples %}
+				<tr>
+					<td class="hospital-name">
+						<!-- Use HTML markup to add bullet points and make text bold {% url 'start_task' %}-->
+						<span style="font-size: 20px;">&#8226;</span> {{ hospital.h_name }}
+					</td>
+					<td class="distance">
+						<strong>Distance: {{ distance|floatformat:"4" }} km
+							{% comment %} <form method="POST" action="" id="task-form2">
+								{% csrf_token %}
+								<input type="hidden" name="h_location" id="h_location" value=" {{ hospital.h_name }} ">
+								<!-- Add other hidden fields for additional hospital data if needed -->
+								<div class="welcome-hero-serch text-center">
+									<button type="submit" class="btn btn-primary welcome-hero-btn">Search <i data-feather="search"></i></button>
+								</div>
+							</form>  {% endcomment %}
+
+
+
+							<form method="POST" id="task-form2">
+								{% csrf_token %}
+								<input type="hidden" name="h_location" id="h_location" value="{{ hospital.h_name }}">
+								<!-- Add other hidden fields for additional hospital data if needed -->
+								<div class="welcome-hero-serch text-center">
+									<button type="submit" class="btn btn-primary welcome-hero-btn">Search <i data-feather="search"></i></button>
+								</div>
+							</form>
+					</td>
+	
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	
+	
+
+		<div class="works-content">
+			<div class="row">
+				<div class="col-md-4 col-sm-6">
+					<div class="single-how-works">
+						<div class="single-how-works-icon">
+							<i class="flaticon-lightbulb-idea"></i>
+						</div>
+						<h2><a href="#">choose <span> what to</span> do</a></h2>
+						<p>
+							Lorem ipsum dolor sit amet, consecte adipisicing elit, sed do eiusmod tempor incididunt ut laboremagna aliqua. 
+						</p>
+						<button class="welcome-hero-btn how-work-btn" onclick="window.location.href='#'">
+							read more
+						</button>
+					</div>
+				</div>
+				<div class="col-md-4 col-sm-6">
+					<div class="single-how-works">
+						<div class="single-how-works-icon">
+							<i class="flaticon-networking"></i>
+						</div>
+						<h2><a href="#">find <span> what you want</span></a></h2>
+						<p>
+							Lorem ipsum dolor sit amet, consecte adipisicing elit, sed do eiusmod tempor incididunt ut laboremagna aliqua. 
+						</p>
+						<button class="welcome-hero-btn how-work-btn" onclick="window.location.href='#'">
+							read more
+						</button>
+					</div>
+				</div>
+				<div class="col-md-4 col-sm-6">
+					<div class="single-how-works">
+						<div class="single-how-works-icon">
+							<i class="flaticon-location-on-road"></i>
+						</div>
+						<h2><a href="#">explore <span> amazing</span> place</a></h2>
+						<p>
+							Lorem ipsum dolor sit amet, consecte adipisicing elit, sed do eiusmod tempor incididunt ut laboremagna aliqua. 
+						</p>
+						<button class="welcome-hero-btn how-work-btn" onclick="window.location.href='#'">
+							read more
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div><!--/.container-->
+
+</section><!--/.works-->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+	$(document).ready(function() {
+		// Define formData variable outside the event handler
+		var formData;
+	
+		$("#task-form2").submit(function(event) {
+			event.preventDefault();  // Prevent default form submission
+	
+			// Get hospital name from the form
+			var hospitalName = $("#h_location").val();
+			console.log("Hospital Name:", hospitalName); // Log the hospital name to the console
+	
+			// Create FormData object to collect form data
+			formData = new FormData();
+			formData.append('h_location', hospitalName);
+	
+			// Add CSRF token to the form data
+			formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
+	
+			// Display progress bar
+			$("#progress-bar").show();
+	
+			// Send AJAX request to start the task
+			$.ajax({
+				url: '/start_task2/', // Update the URL with your Django view URL
+				type: 'POST',
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function(data) {
+					var taskId = data.task_id;
+					console.log("Task ID:", taskId);
+	
+					// Poll for progress updates
+					var intervalId = setInterval(function() {
+						$.get("/get_progress/" + taskId + "/", function(data) {
+							var progress = data.progress * 100;
+							$("#progress").css("width", progress + "%");
+							$("#progress").text("Progress: " + progress.toFixed(2) + "%");
+	
+							// If progress reaches 100%, stop polling
+							if (progress >= 100) {
+								clearInterval(intervalId);
+							}
+						});
+					}, 1000);  // Poll every 1 second
+				},
+				error: function(xhr, status, error) {
+					console.error('Error:', error);
+				}
+			});
+		});
+	});
+</script>
+
+{% comment %} <script>
+	$(document).ready(function() {
+		$("#task-form2").submit(function(event) {
+			event.preventDefault();  // Prevent default form submission
+	
+			// Debugging statement
+			console.log("Form submitted");
+	
+			// Get hospital name from the form
+			var hospitalName = $("#h_location").val();
+			console.log("Hospital Name:", hospitalName); // Log the hospital name to the console
+	
+			// Create FormData object to collect form data
+			var formData = new FormData();
+			formData.append('h_location', hospitalName);
+	
+			// Add CSRF token to the form data
+			formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
+	
+			// Display progress bar
+			$("#progress-bar").show();
+	
+			// Send AJAX request to start the task
+			$.ajax({
+				url: '/start_task2/', // Update the URL with your Django view URL
+				type: 'POST',
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function(data) {
+					var taskId = data.task_id;
+					console.log("Task ID:", taskId);
+	
+					// Poll for progress updates
+					var intervalId = setInterval(function() {
+						$.get("/get_progress/" + taskId + "/", function(data) {
+							var progress = data.progress * 100;
+							$("#progress").css("width", progress + "%");
+							$("#progress").text("Progress: " + progress.toFixed(2) + "%");
+	
+							// If progress reaches 100%, stop polling
+							if (progress >= 100) {
+								clearInterval(intervalId);
+							}
+						});
+					}, 1000);  // Poll every 1 second
+				},
+				error: function(xhr, status, error) {
+					console.error('Error:', error);
+				}
+			});
+		});
+	});
+	
+
+        // Set up CSRF token for AJAX requests
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                }
+            }
+        });
+
+        // Function to get CSRF cookie value
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Function to check if HTTP method is safe
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+		// AJAX POST request with CSRF token included
+		$.ajax({
+			url: '/start_task2/',
+			type: 'POST',
+			data: formData,
+			success: function(data) {
+				var taskId = data.task_id;
+				console.log("Task ID:", taskId);
+				// Add the rest of your success handling code here
+			},
+			error: function(xhr, textStatus, errorThrown) {
+				console.error('Error:', errorThrown);
+			}
+		});
+ 
+</script> {% endcomment %}
+
+
+<script>
+	function calculateDistance() {
+		// Retrieve latitude and longitude values from input fields
+		var latitude = $('#P_latitude').val();
+		var longitude = $('#P_longitude').val();
+	
+		// Make AJAX request to the distance URL
+		$.ajax({
+			url: '/distance',
+			method: 'GET',
+			success: function(response) {
+				// Update the hospital table with the response data
+				$('#hospital-table').html(response);
+			},
+			error: function(xhr, status, error) {
+				console.error('Error:', error);
+			}
+		});
+	}
+</script>
+
+{% comment %} Error Handler {% endcomment %}
+<script>
+	$(document).ready(function() {
+		$('#task-form').submit(function(event) {
+			event.preventDefault(); // Prevent default form submission
+	
+			// Serialize form data
+			var formData = $(this).serialize();
+	
+			// Submit form data asynchronously using AJAX
+			$.ajax({
+				url: $(this).attr('action'),
+				type: $(this).attr('method'),
+				data: formData,
+				success: function(response) {
+					// Handle success response
+					if (response.error) {
+						// Display error message
+						alert(response.error);
+					} else {
+						// Check if hospital location is provided
+						var h_location = $('#h_location').val();
+						if (h_location) {
+							// Display success message
+							
+							// Optionally, redirect to another page
+							
+						} else {
+							// Display message if hospital location is not entered
+							alert("Please enter Hospital Location");
+						}
+					}
+				},
+				error: function(xhr, errmsg, err) {
+					// Handle error
+					console.log(xhr.status + ": " + xhr.responseText); // Log error to console
+				}
+			});
+		});
+	});
+</script>
+
+{% comment %} ----progress Bar--- {% endcomment %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+	$(document).ready(function() {
+		$("#task-form").submit(function(event) {
+			event.preventDefault();  // Prevent default form submission
+
+			// Get form data
+			var formData = $(this).serialize();
+
+			// Display progress bar
+			$("#progress-bar").show();
+
+			// Send AJAX request to start the task
+			$.post("/start_task/", formData, function(data) {
+				var taskId = data.task_id;
+				console.log("Task ID:", taskId);
+
+				// Poll for progress updates
+				var intervalId = setInterval(function() {
+					$.get("/get_progress/" + taskId + "/", function(data) {
+						var progress = data.progress * 100;
+						$("#progress").css("width", progress + "%");
+						$("#progress").text("Progress: " + progress.toFixed(2) + "%");
+
+						// If progress reaches 100%, stop polling
+						if (progress >= 100) {
+							clearInterval(intervalId);
+						}
+					});
+				}, 1000);  // Poll every 1 second
+			});
+		});
+	});
+
+
+
+	$.ajaxSetup({
+		beforeSend: function(xhr, settings) {
+			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+				xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+			}
+		}
+	});
+	
+	// Function to get CSRF cookie value
+	function getCookie(name) {
+		var cookieValue = null;
+		if (document.cookie && document.cookie !== '') {
+			var cookies = document.cookie.split(';');
+			for (var i = 0; i < cookies.length; i++) {
+				var cookie = jQuery.trim(cookies[i]);
+				// Does this cookie string begin with the name we want?
+				if (cookie.substring(0, name.length + 1) === (name + '=')) {
+					cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+					break;
+				}
+			}
+		}
+		return cookieValue;
+	}
+	
+	// Function to check if HTTP method is safe
+	function csrfSafeMethod(method) {
+		// these HTTP methods do not require CSRF protection
+		return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+	
+	// AJAX POST request with CSRF token included
+	$.ajax({
+		url: '/start_task/',
+		type: 'POST',
+		data: formData,
+		success: function(data) {
+			var taskId = data.task_id;
+			console.log("Task ID:", taskId);
+			// Add the rest of your success handling code here
+		},
+		error: function(xhr, textStatus, errorThrown) {
+			console.error('Error:', errorThrown);
+		}
+	});
+</script>
+
+
+<script>
+	
+		function fetchAddressSuggestions(query) {
+		fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}&countrycodes=in`)
+			.then(response => response.json())
+			.then(data => {
+				displayAddressSuggestions(data);
+			})
+			.catch(error => {
+				console.error('Error fetching address suggestions:', error);
+			});
+		}
+	
+		// Function to display address suggestions
+		function displayAddressSuggestions(suggestions) {
+		const suggestionsContainer = document.getElementById('address-suggestions');
+		suggestionsContainer.innerHTML = ''; // Clear previous suggestions
+	
+		suggestions.forEach(suggestion => {
+			const suggestionElement = document.createElement('div');
+			suggestionElement.textContent = suggestion.display_name;
+			suggestionElement.classList.add('suggestion');
+			suggestionElement.addEventListener('click', () => {
+				// Set the selected address from the suggestion
+				document.getElementById('h_location').value = suggestion.display_name;
+				// Clear the suggestions container
+				suggestionsContainer.innerHTML = '';
+			});
+			suggestionsContainer.appendChild(suggestionElement);
+		});
+		}
+	
+		// Function to handle input in the address input field
+		function handleInput() {
+		const input = document.getElementById('h_location');
+		const query = input.value.trim();
+		if (query.length > 0) {
+			fetchAddressSuggestions(query);
+		} else {
+			// Clear suggestions if input is empty
+			document.getElementById('address-suggestions').innerHTML = '';
+		}
+		}
+	
+		// Attach input event listener to address input field
+		document.getElementById('h_location').addEventListener('input', handleInput);
+</script>
+
+
+
+<script>
+
+		// JavaScript code to retrieve current location
+		$(document).ready(function() {
+		  $('#gps-indicator').click(function() {
+			// Check if geolocation is supported
+			if ("geolocation" in navigator) {
+			  // Get current position
+			  navigator.geolocation.getCurrentPosition(function(position) {
+				// Extract latitude and longitude
+				var latitude = position.coords.latitude;
+				var longitude = position.coords.longitude;
+				// Display result
+				$('#location-result').html('Your current location is: Latitude ' + latitude + ', Longitude ' + longitude);
+				// Populate input fields
+				$('#P_latitude').val(latitude);
+				$('#P_longitude').val(longitude);
+			  }, function(error) {
+				// Handle error
+				$('#location-result').html('Error: ' + error.message);
+			  });
+			} else {
+			  $('#location-result').html('Geolocation is not supported by your browser');
+			}
+		  });
+		});
+</script>	
+	
+<script>
+
+		// JavaScript code to retrieve current location
+		$(document).ready(function() {
+		  $('#task-form2').click(function() {
+			// Check if geolocation is supported
+			if ("geolocation" in navigator) {
+			  // Get current position
+			  navigator.geolocation.getCurrentPosition(function(position) {
+				// Extract latitude and longitude
+				var latitude = position.coords.latitude;
+				var longitude = position.coords.longitude;
+				// Display result
+				$('#location-result').html('Your current location from form2 is: Latitude ' + latitude + ', Longitude ' + longitude);
+				// Populate input fields
+				$('#P_latitude').val(latitude);
+				$('#P_longitude').val(longitude);
+			  }, function(error) {
+				// Handle error
+				$('#location-result').html('Error: ' + error.message);
+			  });
+			} else {
+			  $('#location-result').html('Geolocation is not supported by your browser');
+			}
+		  });
+		});
+</script>
+
+
+{% endblock body%}
+
+
+

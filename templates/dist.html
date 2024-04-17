@@ -1,0 +1,58 @@
+{% extends 'base2.html' %}
+
+{%block body%}
+
+
+<section id="home" class="welcome-hero">
+
+		
+    <div class="container content-center">
+    
+        <div class="welcome-hero-txt">
+             <h2> Smart Route for <br> Ambulance And Fire Brigade<br></h2>
+            <p>
+                 Find Clear Route's for Ambulance, Fire Brigade and more think in just One click 
+             </p> 
+         </div>
+         
+         <div class="welcome-hero-txt">
+            <h2><br> Nearest Hospitals  <br></h2>
+            
+        </div>
+     
+     </div>
+ 
+ 
+</section>
+
+{% comment %} <section id="home" class="welcome-hero"> {% endcomment %}
+    <div class="welcome-hero-txt">
+        
+       <p>
+            Find Clear Route's for Ambulance, Fire Brigade and more think in just One click 
+        </p> 
+    </div>
+		
+   <div class="container content-center mt-3">
+        <div class="row justify-content-md-center">
+   
+    
+            <h1>Near Distances:</h1>
+            <ul>
+                {% if near_dist %}
+                    {% for distance in near_dist %}
+                        <li>{{ distance }}</li>
+                    {% endfor %}
+                {% else %}
+                    <li>No distances found.</li>
+                {% endif %}
+            </ul>
+
+        </div>
+    </div>
+
+
+{% comment %} </section> {% endcomment %}
+</div>
+
+{% endblock body%}

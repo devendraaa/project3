@@ -1,0 +1,389 @@
+{% extends 'base2.html' %}
+
+
+{% comment %} {% block title %}login {% endblock title %} {% endcomment %}
+
+{%block body%}
+
+<section id="home" class="welcome-hero">
+
+		
+	<div class="container content-center">
+		<div class="welcome-hero-txt text-center">
+			<h2> Smart Route for <br> Ambulance And Fire Brigade<br></h2>
+			<p>
+				Find Clear Route's for Ambulance, Fire Brigade and more think in just One click 
+			</p>
+		</div>
+
+		<div class="text-center"> <!-- Center the form -->
+			<form class="myform mx-auto" method="POST" action="/hospital" id="task-form"> <!-- Add mx-auto class -->
+				{% csrf_token %}
+				<div class="row justify-content-center mt-3">
+					<div class="col-md-12">
+						<div class="welcome-hero-serch-box">
+							<div class="welcome-hero-form">
+								<div class="single-welcome-hero-form">
+									<h3>Hospital</h3>
+									<input type="text" class="form-control" placeholder="Hospital Name:" id="h_location" name="h_location">
+								</div>
+							</div>
+
+							<div class="row justify-content-center mt-6">
+								<div class="col-md-6">
+	
+									<div class="welcome-hero-serch text-center">
+										<button type="submit" class="btn btn-primary welcome-hero-btn">Submit </button>
+									</div>
+	
+								</div>
+	
+							</div>
+
+							
+						</div>
+					</div>
+				</div>
+			
+				
+
+				<div class="row justify-content-center mt-3">
+					<div class="col-md-12 text-center">
+						<div id="address-suggestions"></div>
+					</div>
+				</div>
+
+
+			
+
+			</form>
+
+			<li><a href="/View">View HOSPITAL DATA</a></li>
+		</div> <!-- End of centered form -->
+
+	
+	</div>
+
+	{% comment %} <form id="delete-form">
+		{% csrf_token %}
+		<table>
+			<thead>
+				<tr>
+					<th>Select</th>
+					<th>Name</th>
+					<!-- Add other fields as needed -->
+				</tr>
+			</thead>
+			<tbody>
+				{% for hospital in hospitals %}
+				<tr>
+					<td><input type="checkbox" name="selected_ids[]" value="{{ hospital.pk }}"></td>
+					<td>{{ hospital.h_name}}</td>
+					<input type="hidden" id="csrf-token" value="{{ csrf_token }}">
+					<!-- Display other fields as needed -->
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<button type="button" id="delete-button">Delete Selected Hospitals</button>
+		
+	</form> {% endcomment %}
+</section>
+
+<div class="container content-center">
+	<div class="welcome-hero-txt text-center">
+		<h2><strong>Hospital Name</h2>
+
+
+<style>
+    /* Style for the table */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    /* Style for table header */
+    th {
+        background-color: #f2f2f2;
+        text-align: center;
+        padding: 20px 10px;
+        font-size: 20px;
+        color: #333;
+    }
+
+    /* Style for table body */
+    td {
+        padding: 10px;
+    }
+
+    /* Style for hospital names */
+    .hospital-name {
+        font-weight: bold;
+        font-size: 16px;
+        color: #333;
+    }
+</style>
+
+
+<li><a href="/fetch_and_store_hospitals">Fetch Hospital Data:</a></li>
+<table>
+    <thead>
+        <tr>
+            <th colspan="2" style="background-color: #4CAF50; color: white; padding: 20px;">
+                <h1 style="text-align: center; margin: 0;"><strong>Hospital Name</h1>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for hospital in hospitals %}
+        <tr>
+            <!-- Uncomment the line below if you want to include checkboxes -->
+            <!-- <td><input type="checkbox" name="selected_ids[]" value="{{ hospital.pk }}"></td> -->
+            <td class="hospital-name">
+                <!-- Use HTML markup to add bullet points and make text bold -->
+                <span style="font-size: 20px;">&#8226;</span> {{ hospital.h_name }}
+            </td>
+            <!-- Add other fields as needed -->
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+		</div>
+</div>
+  <div class="welcome-hero-txt text-center">
+    <h2> Smart Route for <br> Ambulance And Fire Brigade<br></h2>
+    <p>
+      Find Clear Route's for Ambulance, Fire Brigade and more think in just One click 
+    </p>
+{% comment %} 
+	<form id="delete-form">
+		{% csrf_token %}
+
+			{% for item in data %}
+				<input type="checkbox" name="selected_ids[]" value="{{ item.id }}" onclick="console.log('{{ item.id }}')"> {{ item }}<br>
+			{% endfor %}
+
+		<button type="submit">Delete Selected Items</button>
+
+		action="{% url 'delete_selected_hospitals' %}"
+	</form> {% endcomment %}
+
+
+
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+	  $(document).ready(function() {
+		  $('#delete-button').click(function(event) {
+			  event.preventDefault();
+			  var selectedIds = $('#delete-form').find('input[name="selected_ids[]"]:checked').map(function() {
+				  return $(this).val();
+			  }).get();
+  
+			  if (selectedIds.length === 0) {
+				  alert('Please select at least one item to delete.');
+				  return;
+			  }
+
+			// Debugging output to check selectedIds
+			console.log('Selected IDs:', selectedIds);
+
+			console.log('Number of selected checkboxes:', $(this).find('input[name="selected_ids[]"]:checked').length);
+			console.log('Form submitted');
+
+			  var csrfToken = $('#csrf-token').val();
+			  $.ajax({
+				  url: '/delete-hospitals',
+				  type: 'POST',
+				  data: {
+					  'selected_ids': selectedIds,
+					  'csrfmiddlewaretoken': '{{ csrf_token }}'
+				  },
+				  success: function(response) {
+					  alert('Selected hospitals deleted successfully.');
+					  // Optionally, refresh the page or update the UI
+				  },
+				  error: function(xhr, status, error) {
+					  console.error('Error:', error);
+				  }
+			  });
+		  });
+	  });
+  </script>
+
+
+{% comment %} <script>
+	$(document).ready(function() {
+		$('#delete-form').submit(function(event) {
+			event.preventDefault();
+			var selectedIds = $(this).find('input[name="selected_ids[]"]:checked').map(function() {
+				return $(this).val();
+			}).get();
+			
+			// Filter out empty strings
+			selectedIds = selectedIds.filter(function(id) {
+				return id !== '';
+			});
+	
+			// Debugging output to check selectedIds
+			console.log('Selected IDs:', selectedIds);
+
+			console.log('Number of selected checkboxes:', $(this).find('input[name="selected_ids[]"]:checked').length);
+			console.log('Form submitted');
+	
+			// Check if any item is selected
+			if (selectedIds.length === 0) {
+				alert('Please select at least one item to delete.');
+				return;
+			}
+	
+			deleteSelectedData(selectedIds);
+		});
+	
+		function deleteSelectedData(selectedIds) {
+			$.ajax({
+				url: '/delete-selected-data/',
+				type: 'POST',
+				data: {
+					'selected_ids[]': selectedIds,
+					'csrfmiddlewaretoken': '{{ csrf_token }}'
+				},
+				success: function(response) {
+					alert('Selected items deleted successfully.');
+					// Optionally, refresh the page or update the UI
+				},
+				error: function(xhr, status, error) {
+					console.error('Error:', error);
+				}
+			});
+		}
+	});
+	
+	
+</script> {% endcomment %}
+
+<script>
+		$(document).ready(function() {
+			$('#task-form2').submit(function(event) {
+				event.preventDefault(); // Prevent default form submission
+		
+				// Serialize form data
+				var formData = $(this).serialize();
+		
+				// Submit form data asynchronously using AJAX
+				$.ajax({
+					url: $(this).attr('action'),
+					type: $(this).attr('method'),
+					data: formData,
+					success: function(response) {
+						// Handle success response
+						if (response.error) {
+							// Display error message
+							alert(response.error);
+						} else {
+							// Check if hospital location is provided
+							var latitude = $('#h_latitude').val();
+                            var longitude = $('#h_longitude').val();
+							if (latitude && longitude) {
+								// Display success message
+								
+								// Optionally, redirect to another page
+								
+							} else {
+								// Display message if hospital location is not entered
+								alert("Please Enter Hospital Coordinates");
+							}
+						}
+					},
+					error: function(xhr, errmsg, err) {
+						// Handle error
+						console.log(xhr.status + ": " + xhr.responseText); // Log error to console
+					}
+				});
+			});
+		});
+</script>
+
+
+<script>
+	
+    function fetchAddressSuggestions(query) {
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}&countrycodes=in`)
+        .then(response => response.json())
+        .then(data => {
+            displayAddressSuggestions(data);
+        })
+        .catch(error => {
+            console.error('Error fetching address suggestions:', error);
+        });
+    }
+
+    // Function to display address suggestions
+    function displayAddressSuggestions(suggestions) {
+    const suggestionsContainer = document.getElementById('address-suggestions');
+    suggestionsContainer.innerHTML = ''; // Clear previous suggestions
+
+    suggestions.forEach(suggestion => {
+        const suggestionElement = document.createElement('div');
+        suggestionElement.textContent = suggestion.display_name;
+        suggestionElement.classList.add('suggestion');
+        suggestionElement.addEventListener('click', () => {
+            // Set the selected address from the suggestion
+            document.getElementById('h_location').value = suggestion.display_name;
+            // Clear the suggestions container
+            suggestionsContainer.innerHTML = '';
+        });
+        suggestionsContainer.appendChild(suggestionElement);
+    });
+    }
+
+    // Function to handle input in the address input field
+    function handleInput() {
+    const input = document.getElementById('h_location');
+    const query = input.value.trim();
+    if (query.length > 0) {
+        fetchAddressSuggestions(query);
+    } else {
+        // Clear suggestions if input is empty
+        document.getElementById('address-suggestions').innerHTML = '';
+    }
+    }
+
+    // Attach input event listener to address input field
+    document.getElementById('h_location').addEventListener('input', handleInput);
+</script>
+
+
+
+<script>
+
+    // JavaScript code to retrieve current location
+    $(document).ready(function() {
+      $('#gps-indicator').click(function() {
+        // Check if geolocation is supported
+        if ("geolocation" in navigator) {
+          // Get current position
+          navigator.geolocation.getCurrentPosition(function(position) {
+            // Extract latitude and longitude
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            // Display result
+            $('#location-result').html('Your current location is: Latitude ' + latitude + ', Longitude ' + longitude);
+            // Populate input fields
+            $('#h_latitude').val(latitude);
+            $('#h_longitude').val(longitude);
+          }, function(error) {
+            // Handle error
+            $('#location-result').html('Error: ' + error.message);
+          });
+        } else {
+          $('#location-result').html('Geolocation is not supported by your browser');
+        }
+      });
+    });
+  </script>	
+
+{% endblock body%}

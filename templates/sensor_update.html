@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Fixed Coordinates</title>
+</head>
+<body>
+    <h1>Update Fixed Coordinates</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="latitude">Latitude:</label><br>
+        <input type="number" id="latitude" name="latitude" step="0.0001" required><br><br>
+        <label for="longitude">Longitude:</label><br>
+        <input type="number" id="longitude" name="longitude" step="0.0001" required><br><br>
+        <input type="submit" value="Update">
+    </form>
+</body>
+</html>
