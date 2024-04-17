@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-g87cc$1a+p#*!1@&*%qn429h)z=l9x9f!!o6a4rawiy9w+n)n@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app', '.now.sh', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', "https://smart-ambulance.onrender.com"]
 
 # 'localhost', '127.0.0.1'
 
