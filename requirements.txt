@@ -3,6 +3,7 @@ branca==0.7.1
 certifi==2024.2.2
 charset-normalizer==3.3.2
 colorama==0.4.6
+dj-database-url==2.1.0
 Django==3.2.1
 folium==0.16.0
 geographiclib==2.0
