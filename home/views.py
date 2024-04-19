@@ -521,7 +521,7 @@ def new_lat_lon(coordinates):
 
 
 def new_coord(): # store all sensor coordinations of mumbai in a postgre database
-    coordinate = pd.read_csv("E:\\new_django\Hello\static\output2.csv")
+    coordinate = pd.read_csv("static/output.csv")
 
     coordinate.rename(columns = {'19.061042984816705':'latitude', '72.84680396318437':'longitude'}, inplace = True)
 
