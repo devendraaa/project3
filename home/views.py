@@ -520,17 +520,21 @@ def new_lat_lon(coordinates):
     print(sen_da)
 
 
-# def new_coord(): # store all sensor coordinations of mumbai in a postgre database
-#     coordinate = pd.read_csv("E:\\new_django\Hello\static\output.csv")
+def new_coord(): # store all sensor coordinations of mumbai in a postgre database
+    coordinate = pd.read_csv("E:\\new_django\Hello\static\output2.csv")
 
-#     coordinate.rename(columns = {'19.061042984816705':'latitude', '72.84680396318437':'longitude'}, inplace = True)
+    coordinate.rename(columns = {'19.061042984816705':'latitude', '72.84680396318437':'longitude'}, inplace = True)
 
-#     for i in range(len(coordinate)):
-#         sen_loc = sen_locc(lat=coordinate.iloc[i][0], lon=coordinate.iloc[i][1])
-#         sen_loc.save()
-#         print("New Coordinate Save Successfully to DataBase:")
+    for i in range(len(coordinate)):
+        sen_loc = sen_locc(lat=coordinate.iloc[i][0], lon=coordinate.iloc[i][1])
+        sen_loc.save()
+        print("New Coordinate Save Successfully to DataBase:")
 
-#     print(coordinate.iloc[0][0])
+    print(coordinate.iloc[0][0])
+
+def n_cord(request):
+    new_coord()
+    return render(request, "map.html")
 
 def long_running_task2(task_id, latitude, longitude, Hospital_loc):
     geolocator = Nominatim(user_agent="Smart Ambulance Route with AI")
