@@ -1,0 +1,7 @@
+services:
+  - name: web
+    routes:
+      - type: nuxt
+        src: static/css/style.css
+        mime_types:
+          text/css: [css]
