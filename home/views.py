@@ -710,6 +710,12 @@ def start_task(request):
         
         
         task_id = str(uuid.uuid4())  # Generate unique task ID
+        
+        # Store relevant data in the session
+        request.session['p_lat'] = p_lat
+        request.session['p_lon'] = p_lon
+        request.session['h_loc'] = h_loc
+        
         task_thread = threading.Thread(target=long_running_task, args=(task_id, p_lat, p_lon, h_loc))
         task_thread.start()
 
