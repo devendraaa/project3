@@ -15,6 +15,14 @@ from django.contrib.messages import constants as messages
 import dj_database_url
 import os
 
+# Set session engine
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+# Set a unique session cookie name
+SESSION_COOKIE_NAME = 'road_project'
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
